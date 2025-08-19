@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  backend:
+    build: 
+      context: ./backend       # contexto do build é a pasta do backend
+      dockerfile: Dockerfile   # Dockerfile dentro de backend
+    container_name: movie_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app         # mapeia a pasta backend para /app dentro do container
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: moviedb
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
