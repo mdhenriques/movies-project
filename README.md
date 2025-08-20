@@ -101,7 +101,7 @@ Desenvolver uma aplicação web que funcione como um banco de filmes, permitindo
 ## Modelo Banco
 
 <p align="center">
-  <img src="./modelo-banco.svg" alt="Modelo do Banco de Dados" width="700">
+  <img src="./Untitled.svg" alt="Modelo do Banco de Dados" width="700">
 </p>
 
 ## 📌 Próximas Ideias (pós-MVP)
