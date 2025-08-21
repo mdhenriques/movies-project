@@ -1,6 +1,9 @@
 import requests
 import os
 from typing import List, Dict, Optional
+from dotenv import load_dotenv
+
+load_dotenv()
 
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 BASE_URL = "https://api.themoviedb.org/3"
