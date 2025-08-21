@@ -1,5 +1,6 @@
+from typing import Generator
 from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.exc import SQLAlchemyError
 import os
 
@@ -20,3 +21,11 @@ def test_connection():
             print("Conexão bem-sucedida! Resultado:", result.scalar())
     except SQLAlchemyError as e:
         print("Erro ao conectar no banco:", e)
+
+
+def get_db() -> Generator[Session, None, None]:
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

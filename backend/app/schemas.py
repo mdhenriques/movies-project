@@ -10,17 +10,19 @@ class UserBase(BaseModel):
     name: str
     email: EmailStr
 
-
 class UserCreate(UserBase):
     password: str
 
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
 
 class UserResponse(UserBase):
     id: int
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # ======================
@@ -41,7 +43,7 @@ class MovieResponse(MovieBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # ======================
@@ -62,7 +64,7 @@ class ListResponse(ListBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # ======================
@@ -84,7 +86,7 @@ class RatingResponse(RatingBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # ======================
@@ -104,4 +106,4 @@ class ListMovieResponse(ListMovieBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
