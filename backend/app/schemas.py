@@ -4,6 +4,16 @@ from typing import List, Optional
 
 
 # ======================
+# TOKEN
+# ======================
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    user_id: int
+    email: str
+# ======================
 # USER
 # ======================
 class UserBase(BaseModel):
@@ -14,12 +24,16 @@ class UserCreate(UserBase):
     password: str
 
 class UserLogin(BaseModel):
-    email: EmailStr
+    email: str
     password: str
 
-class UserResponse(UserBase):
+class UserResponse(BaseModel):
     id: int
+    name: str
+    email: str
     created_at: datetime
+    access_token: str  # Add this field
+    token_type: str = "bearer"
 
     class Config:
         from_attributes = True
