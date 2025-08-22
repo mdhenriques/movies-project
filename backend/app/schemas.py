@@ -88,6 +88,31 @@ class RatingResponse(RatingBase):
     class Config:
         from_attributes = True
 
+# ======================
+# SEARCH_MOVIE
+# ======================
+class MovieSearchResult(BaseModel):
+    id: int
+    title: str
+    description: Optional[str] = None
+    release_date: Optional[datetime] = None
+    poster_path: Optional[str] = None
+    vote_average: Optional[float] = None
+    vote_count: Optional[int] = None
+    
+    class Config:
+        from_attributes = True
+
+class SearchResponse(BaseModel):
+    results: List[MovieSearchResult]
+    total_count: int
+    page: int
+    total_pages: int
+
+class SearchQuery(BaseModel):
+    query: str
+    page: int = 1
+    limit: int = 20
 
 # ======================
 # LIST_MOVIE (Pivot)
