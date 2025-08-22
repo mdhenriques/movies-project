@@ -1,37 +1,36 @@
+# main.py
 from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import Optional
+from fastapi.openapi.utils import get_openapi
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from .database import test_connection
+from app.database import test_connection
+from app.auth import routes as auth_routes
+from app.routes import import_movies as import_routes
+from app.routes import search as search_routes
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Executa ao iniciar
     test_connection()
     yield
-    # Aqui você pode colocar lógica de "shutdown" se quiser
-    # exemplo: fechar conexões, limpar recursos etc.
 
-app = FastAPI(title="Movie Bank API", lifespan=lifespan)
+app = FastAPI(
+    title="Movie Bank API",
+    description="API for movie catalog and recommendations with JWT authentication",
+    version="1.0.0",
+    lifespan=lifespan,
+    swagger_ui_parameters={"persistAuthorization": True}
+)
 
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# Exemplo de modelo
-class Movie(BaseModel):
-    id: int
-    title: str
-    year: Optional[int] = None
-
-# Rota de teste
-@app.get("/")
-async def root():
-    return {"message": "API do Movie Bank funcionando!"}
-
-# Rota de teste com parâmetro
-@app.get("/movie/{movie_id}")
-async def get_movie(movie_id: int):
-    return {"movie_id": movie_id, "title": f"Filme {movie_id}"}
-
-# Rota de teste POST
-@app.post("/movie/")
-async def create_movie(movie: Movie):
-    return {"message": "Filme criado com sucesso!", "movie": movie}
+# Include routers
+app.include_router(auth_routes.router)
+app.include_router(import_routes.router)
+app.include_router(search_routes.router)
