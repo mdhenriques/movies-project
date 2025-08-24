@@ -14,5 +14,5 @@ export const movieService = {
     api.get(`/search/movies?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}`),
 
 }
-  
+
 export default movieService
