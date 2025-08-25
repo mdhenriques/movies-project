@@ -26,6 +26,11 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
 
+    # Create default lists for the new user
+    from app.services.list_service import ListService
+    list_service = ListService(db)
+    list_service.create_default_lists(new_user.id)
+
     # Create access token
     access_token = create_access_token(
         data={"user_id": new_user.id, "email": new_user.email}

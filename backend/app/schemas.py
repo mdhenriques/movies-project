@@ -1,6 +1,6 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 
 # ======================
@@ -64,21 +64,53 @@ class MovieResponse(MovieBase):
 # LIST
 # ======================
 class ListBase(BaseModel):
-    name: str
-    description: Optional[str] = None
-
+    name: str = Field(..., min_length=1, max_length=100)
+    description: Optional[str] = Field(None, max_length=500)
+    is_public: bool = False
+    list_type: str = Field("custom", pattern="^(watchlist|favorites|custom)$")
 
 class ListCreate(ListBase):
     pass
 
+class ListUpdate(BaseModel):
+    name: Optional[str] = Field(None, min_length=1, max_length=100)
+    description: Optional[str] = Field(None, max_length=500)
+    is_public: Optional[bool] = None
 
 class ListResponse(ListBase):
     id: int
     user_id: int
+    movie_count: int = 0  # Make it optional with default value
     created_at: datetime
+    updated_at: datetime
 
     class Config:
         from_attributes = True
+# ListMovie Schemas
+class ListMovieBase(BaseModel):
+    movie_id: int
+    notes: Optional[str] = Field(None, max_length=1000)
+    position: Optional[int] = Field(0, ge=0)
+
+class ListMovieCreate(ListMovieBase):
+    pass
+
+class ListMovieResponse(ListMovieBase):
+    id: int
+    list_id: int
+    added_at: datetime
+    movie_title: str
+    movie_poster: Optional[str]
+
+    class Config:
+        from_attributes = True
+
+# Movie with list context
+class MovieWithListContext(BaseModel):
+    movie: Dict[str, Any]
+    in_watchlist: bool
+    in_favorites: bool
+    custom_lists: List[str]
 
 
 # ======================
@@ -128,21 +160,3 @@ class SearchQuery(BaseModel):
     page: int = 1
     limit: int = 20
 
-# ======================
-# LIST_MOVIE (Pivot)
-# ======================
-class ListMovieBase(BaseModel):
-    list_id: int
-    movie_id: int
-
-
-class ListMovieCreate(ListMovieBase):
-    pass
-
-
-class ListMovieResponse(ListMovieBase):
-    id: int
-    created_at: datetime
-
-    class Config:
-        from_attributes = True

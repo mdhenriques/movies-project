@@ -7,6 +7,7 @@ from app.database import test_connection
 from app.auth import routes as auth_routes
 from app.routes import import_movies as import_routes
 from app.routes import search as search_routes
+from app.routes import lists as list_routes
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -34,3 +35,4 @@ app.add_middleware(
 app.include_router(auth_routes.router)
 app.include_router(import_routes.router)
 app.include_router(search_routes.router)
+app.include_router(list_routes.router)

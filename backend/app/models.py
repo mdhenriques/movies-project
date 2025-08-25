@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Float, Table
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Float, Table, Boolean
 from sqlalchemy.orm import relationship, declarative_base
 from datetime import datetime
 
@@ -72,7 +72,10 @@ class List(Base):
     name = Column(String, nullable=False)
     description = Column(Text)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
+    is_public = Column(Boolean, default=False)  # New: public or private list
+    list_type = Column(String, default="custom")  # New: 'watchlist', 'favorites', 'custom'
     created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # relações
     user = relationship("User", back_populates="lists")
@@ -100,7 +103,9 @@ class ListMovie(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     list_id = Column(Integer, ForeignKey("lists.id", ondelete="CASCADE"))
     movie_id = Column(Integer, ForeignKey("movies.id", ondelete="CASCADE"))
-    created_at = Column(DateTime, default=datetime.utcnow)
+    added_at = Column(DateTime, default=datetime.utcnow)
+    notes = Column(Text)  # New: user notes for this movie in the list
+    position = Column(Integer, default=0)  # New: custom ordering
 
     # relações
     list = relationship("List", back_populates="list_movies")

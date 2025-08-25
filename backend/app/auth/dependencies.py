@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app import models
 from app.auth.utils import verify_token
+from jose.exceptions import JWTError
 
 # Use simple HTTPBearer instead of OAuth2
 security = HTTPBearer(auto_error=False)
